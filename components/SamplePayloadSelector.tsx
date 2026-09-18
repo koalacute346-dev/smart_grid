@@ -53,71 +53,71 @@ export function SamplePayloadSelector({
   };
 
   return (
-    <div className="glass-panel rounded-2xl p-5 sm:p-6 border border-slate-800 bg-slate-900/60 shadow-xl space-y-6">
-      {/* Header & Scenario Selector Pills */}
+    <div className="bg-white rounded-xl p-5 sm:p-6 border border-zinc-200 shadow-sm space-y-6">
+      {/* Header & Primary CTA Action */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center space-x-2">
-            <Zap className="w-4 h-4 text-emerald-400" />
-            <h2 className="text-base sm:text-lg font-bold text-slate-100">
+            <Zap className="w-4 h-4 text-zinc-950" />
+            <h2 className="text-base sm:text-lg font-bold text-zinc-950 tracking-tight">
               Evaluation Scenario Selector
             </h2>
           </div>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-zinc-500">
             Select a calibrated 24-hour test scenario or inspect raw JSON parameters before dispatch.
           </p>
         </div>
 
-        {/* Action Button */}
+        {/* Primary CTA Button: Bold, authoritative executive button */}
         <button
           onClick={onExecute}
           disabled={isLoading}
-          className={`inline-flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl font-medium text-sm transition-all shadow-lg ${
-            isLoading
-              ? 'bg-slate-800 text-slate-400 cursor-not-allowed border border-slate-700'
-              : 'bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-semibold shadow-emerald-500/20 active:scale-[0.98]'
+          className={`bg-zinc-950 hover:bg-zinc-800 text-white font-bold px-6 py-3 rounded-xl shadow-md active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-sm ${
+            isLoading ? 'opacity-70 cursor-not-allowed' : ''
           }`}
         >
           {isLoading ? (
             <>
-              <Loader2 className="w-4 h-4 animate-spin text-emerald-400" />
+              <Loader2 className="w-4 h-4 animate-spin text-white" />
               <span>Optimizing 24h Horizon...</span>
             </>
           ) : (
             <>
-              <Play className="w-4 h-4 fill-current" />
+              <Play className="w-4 h-4 fill-current text-white" />
               <span>Run Optimization Dispatch</span>
             </>
           )}
         </button>
       </div>
 
-      {/* Scenario Pills */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+      {/* Scenario Selector Cards / Pills */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {scenarios.map((scenario, idx) => {
           const isSelected = scenario.id === currentScenario.id;
           return (
             <button
               key={scenario.id}
               onClick={() => onSelectScenario(scenario.input, scenario.expectedResponse)}
-              className={`p-3 rounded-xl text-left transition-all border ${
+              className={`p-3.5 rounded-xl text-left transition-all ${
                 isSelected
-                  ? 'bg-emerald-950/40 border-emerald-500 text-slate-100 shadow-md shadow-emerald-950/50'
-                  : 'bg-slate-950/50 border-slate-800/80 text-slate-400 hover:border-slate-700 hover:bg-slate-900/60'
+                  ? 'border-2 border-zinc-900 bg-zinc-50 text-zinc-950 font-bold shadow-sm'
+                  : 'border border-zinc-200 text-zinc-600 hover:bg-zinc-50 bg-white'
               }`}
             >
               <div className="flex items-center justify-between mb-1">
-                <span className="text-[11px] font-mono text-slate-400">Scenario {idx + 1}</span>
+                <span className="text-[11px] font-mono font-medium text-zinc-500">
+                  Scenario {idx + 1}
+                </span>
                 {isSelected && (
-                  <span className="inline-flex items-center px-1.5 py-0.2 text-[10px] font-medium bg-emerald-500/20 text-emerald-300 rounded border border-emerald-500/40">
+                  <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-bold bg-zinc-950 text-white rounded-md">
                     Active
                   </span>
                 )}
               </div>
-              <div className="font-semibold text-xs sm:text-sm text-slate-200 truncate">
+              <div className={`text-xs sm:text-sm truncate ${isSelected ? 'text-zinc-950 font-bold' : 'text-zinc-800 font-semibold'}`}>
                 {scenario.badge}
               </div>
-              <div className="text-[11px] text-slate-400 mt-1 line-clamp-1">
+              <div className="text-[11px] text-zinc-500 mt-1 line-clamp-1">
                 {scenario.description}
               </div>
             </button>
@@ -128,61 +128,61 @@ export function SamplePayloadSelector({
       {/* Scenario Metadata & Operator Notes */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Scenario Info */}
-        <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-2">
-          <div className="flex items-center space-x-2 text-xs text-slate-400">
-            <Info className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="font-medium text-slate-300">Scenario Identity</span>
+        <div className="p-4 rounded-xl bg-zinc-50 border border-zinc-200 space-y-2">
+          <div className="flex items-center space-x-2 text-xs text-zinc-600 font-semibold">
+            <Info className="w-3.5 h-3.5 text-zinc-900" />
+            <span>Scenario Identity</span>
           </div>
-          <div className="font-mono text-xs text-cyan-300 font-semibold truncate">
+          <div className="font-mono text-xs text-zinc-900 font-bold truncate">
             {currentScenario.input.scenario_id}
           </div>
-          <p className="text-xs text-slate-400 leading-relaxed">
+          <p className="text-xs text-zinc-500 leading-relaxed">
             {currentScenario.description}
           </p>
         </div>
 
         {/* Battery Parameters */}
-        <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-2">
-          <div className="flex items-center space-x-2 text-xs text-slate-400">
-            <Battery className="w-3.5 h-3.5 text-amber-400" />
-            <span className="font-medium text-slate-300">BESS Storage Configuration</span>
+        <div className="p-4 rounded-xl bg-zinc-50 border border-zinc-200 space-y-2">
+          <div className="flex items-center space-x-2 text-xs text-zinc-600 font-semibold">
+            <Battery className="w-3.5 h-3.5 text-zinc-900" />
+            <span>BESS Storage Configuration</span>
           </div>
           <div className="grid grid-cols-2 gap-2 text-xs font-mono">
             <div>
-              <span className="text-slate-500">Capacity:</span>{' '}
-              <span className="text-amber-300 font-semibold">{currentScenario.input.battery.capacity_kwh} kWh</span>
+              <span className="text-zinc-500">Capacity:</span>{' '}
+              <span className="text-zinc-950 font-bold">{currentScenario.input.battery.capacity_kwh} kWh</span>
             </div>
             <div>
-              <span className="text-slate-500">Initial:</span>{' '}
-              <span className="text-amber-300 font-semibold">{currentScenario.input.battery.initial_energy_kwh} kWh</span>
+              <span className="text-zinc-500">Initial:</span>{' '}
+              <span className="text-zinc-950 font-bold">{currentScenario.input.battery.initial_energy_kwh} kWh</span>
             </div>
             <div>
-              <span className="text-slate-500">Reserve Min:</span>{' '}
-              <span className="text-slate-300">{currentScenario.input.battery.minimum_energy_kwh} kWh</span>
+              <span className="text-zinc-500">Reserve Min:</span>{' '}
+              <span className="text-zinc-800 font-semibold">{currentScenario.input.battery.minimum_energy_kwh} kWh</span>
             </div>
             <div>
-              <span className="text-slate-500">Max C/D:</span>{' '}
-              <span className="text-slate-300">{currentScenario.input.battery.max_charge_kwh_per_hour} kW</span>
+              <span className="text-zinc-500">Max C/D:</span>{' '}
+              <span className="text-zinc-800 font-semibold">{currentScenario.input.battery.max_charge_kwh_per_hour} kW</span>
             </div>
           </div>
         </div>
 
         {/* Operator Directive Log */}
-        <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-2">
-          <div className="flex items-center justify-between text-xs text-slate-400">
+        <div className="p-4 rounded-xl bg-zinc-50 border border-zinc-200 space-y-2">
+          <div className="flex items-center justify-between text-xs text-zinc-600 font-semibold">
             <div className="flex items-center space-x-2">
-              <FileText className="w-3.5 h-3.5 text-purple-400" />
-              <span className="font-medium text-slate-300">Operator Directive Log</span>
+              <FileText className="w-3.5 h-3.5 text-zinc-900" />
+              <span>Operator Directive Log</span>
             </div>
-            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white border border-zinc-200 text-zinc-700 font-medium">
               {currentScenario.input.operator_notes.length} note(s)
             </span>
           </div>
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 max-h-24 overflow-y-auto">
             {currentScenario.input.operator_notes.map((note, nIdx) => (
               <p
                 key={nIdx}
-                className="text-xs text-slate-300 italic bg-slate-900/60 p-2 rounded-lg border border-slate-800/60"
+                className="text-xs text-zinc-700 italic bg-white p-2 rounded-lg border border-zinc-200"
               >
                 &ldquo;{note}&rdquo;
               </p>
@@ -192,49 +192,49 @@ export function SamplePayloadSelector({
       </div>
 
       {/* Expandable Collapsible JSON Drawer */}
-      <div className="border border-slate-800/80 rounded-xl overflow-hidden bg-slate-950/60">
+      <div className="border border-zinc-200 rounded-xl overflow-hidden bg-white shadow-sm">
         <button
           onClick={() => setIsJsonOpen(!isJsonOpen)}
-          className="w-full flex items-center justify-between p-3 px-4 text-xs font-mono text-slate-300 hover:bg-slate-900/50 transition-colors"
+          className="w-full flex items-center justify-between p-3.5 px-4 text-xs font-mono font-medium text-zinc-800 hover:bg-zinc-50 transition-colors"
         >
           <div className="flex items-center space-x-2">
-            <FileCode className="w-3.5 h-3.5 text-cyan-400" />
+            <FileCode className="w-3.5 h-3.5 text-zinc-700" />
             <span>Inspect 24-Hour Input Payload JSON ({currentScenario.input.hours.length} timesteps)</span>
           </div>
-          <div className="flex items-center space-x-2 text-slate-400">
+          <div className="flex items-center space-x-2 text-zinc-500">
             <span>{isJsonOpen ? 'Collapse' : 'Expand'}</span>
             {isJsonOpen ? (
-              <ChevronUp className="w-4 h-4 text-slate-400" />
+              <ChevronUp className="w-4 h-4 text-zinc-600" />
             ) : (
-              <ChevronDown className="w-4 h-4 text-slate-400" />
+              <ChevronDown className="w-4 h-4 text-zinc-600" />
             )}
           </div>
         </button>
 
         {isJsonOpen && (
-          <div className="p-4 border-t border-slate-800/80 bg-slate-950/90 space-y-3">
+          <div className="p-4 border-t border-zinc-200 bg-zinc-50 space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-mono text-slate-400">
+              <span className="text-[11px] font-mono text-zinc-500">
                 OptimizeEnergyInput format compliant with lib/types.ts
               </span>
               <button
                 onClick={handleCopyJson}
-                className="inline-flex items-center space-x-1 px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-mono border border-slate-700 transition-colors"
+                className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-white hover:bg-zinc-100 text-zinc-800 text-xs font-mono border border-zinc-300 transition-colors shadow-sm"
               >
                 {copied ? (
                   <>
-                    <Check className="w-3 h-3 text-emerald-400" />
-                    <span className="text-emerald-400">Copied</span>
+                    <Check className="w-3 h-3 text-emerald-600" />
+                    <span className="text-emerald-700 font-semibold">Copied</span>
                   </>
                 ) : (
                   <>
-                    <Copy className="w-3 h-3 text-slate-400" />
+                    <Copy className="w-3 h-3 text-zinc-500" />
                     <span>Copy JSON</span>
                   </>
                 )}
               </button>
             </div>
-            <pre className="text-xs font-mono text-cyan-300 bg-slate-950 p-4 rounded-lg border border-slate-900 overflow-x-auto max-h-72 custom-scrollbar">
+            <pre className="text-xs font-mono text-zinc-800 bg-zinc-50 border border-zinc-200 rounded-xl p-4 overflow-x-auto max-h-72">
               {JSON.stringify(currentScenario.input, null, 2)}
             </pre>
           </div>

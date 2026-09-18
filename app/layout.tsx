@@ -4,7 +4,7 @@ import { Zap, Cpu, ShieldCheck } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Smart Campus Energy Dispatch | BUP CSE Fest 2026',
-  description: 'AI-driven 24-hour campus microgrid energy optimization engine and dispatch control center.',
+  description: 'Industrial-grade 24-hour campus microgrid energy optimization engine and autonomous dispatch command center.',
 };
 
 export default function RootLayout({
@@ -13,56 +13,53 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-cyan-500/20 selection:text-cyan-300">
+    <html lang="en" className="light">
+      <body className="bg-zinc-50 text-zinc-950 min-h-screen flex flex-col font-sans antialiased selection:bg-zinc-200 selection:text-zinc-900">
         {/* Sticky Executive Navigation Header */}
-        <header className="sticky top-0 z-50 w-full glass-panel border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-xl">
+        <header className="sticky top-0 z-50 w-full bg-white border-b border-zinc-200 shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             {/* Brand and University Microgrid Info */}
             <div className="flex items-center space-x-3 sm:space-x-4">
-              <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500/20 via-emerald-500/20 to-purple-500/20 border border-slate-700/60 shadow-inner">
-                <Zap className="w-5 h-5 text-cyan-400" />
-                <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-                </span>
+              {/* High-contrast bold logo badge */}
+              <div className="relative flex items-center justify-center w-10 h-10 rounded-lg bg-zinc-950 text-white shadow-sm">
+                <Zap className="w-5 h-5 text-amber-400" />
               </div>
 
               <div>
-                <div className="flex items-center space-x-2">
-                  <span className="font-bold text-slate-100 tracking-tight text-base sm:text-lg">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-lg font-bold text-zinc-950 tracking-tight">
                     Smart Campus Energy Dispatch
                   </span>
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-950/80 text-emerald-400 border border-emerald-800/60 shadow-sm">
-                    BUP CSE Fest 2026
+                  <span className="hidden sm:inline-flex bg-zinc-100 text-zinc-700 border border-zinc-200 px-2.5 py-0.5 text-xs font-semibold rounded-md">
+                    BUP CSE Fest 2026 • Autonomous Microgrid Controller
                   </span>
                 </div>
-                <div className="flex items-center space-x-2 text-xs text-slate-400">
-                  <span className="font-mono text-cyan-400/90">Campus Grid 24h Horizon</span>
-                  <span className="text-slate-600">•</span>
-                  <span>Autonomous Microgrid Controller</span>
+                <div className="flex items-center space-x-2 text-xs text-zinc-500">
+                  <span className="font-mono text-zinc-700 font-medium">Campus Grid 24h Horizon</span>
+                  <span className="text-zinc-300">•</span>
+                  <span>Linear Programming Cost Minimization</span>
                 </div>
               </div>
             </div>
 
-            {/* Live Status and Navigation Actions */}
-            <div className="flex items-center space-x-3 sm:space-x-5">
-              {/* Pulsing Live Engine Status Badge */}
-              <div className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-900/80 border border-slate-800 text-xs text-slate-300 shadow-sm">
+            {/* Right Telemetry & Navigation Actions */}
+            <div className="flex items-center space-x-3">
+              {/* Live status badge: Pure white/light-emerald pill with solid green pulsing dot */}
+              <div className="bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-2">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
                 </span>
-                <span className="font-mono text-slate-200 font-medium">Microgrid Engine: Ready</span>
+                <span className="font-mono">Engine: Operational</span>
               </div>
 
-              {/* Quick Specs Link */}
+              {/* Secondary button: Architecture & Specs */}
               <a
                 href="#system-docs"
-                className="hidden md:inline-flex items-center space-x-1.5 text-xs text-slate-400 hover:text-cyan-400 transition-colors py-1.5 px-2.5 rounded-md hover:bg-slate-900 border border-transparent hover:border-slate-800"
+                className="hidden md:inline-flex items-center space-x-1.5 border border-zinc-300 hover:bg-zinc-50 text-zinc-800 text-xs font-medium px-3 py-1.5 rounded-lg transition-colors shadow-sm"
               >
-                <Cpu className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Specs &amp; Architecture</span>
+                <Cpu className="w-3.5 h-3.5 text-zinc-600" />
+                <span>Architecture &amp; Specs</span>
               </a>
             </div>
           </div>
@@ -74,13 +71,15 @@ export default function RootLayout({
         </main>
 
         {/* Executive Footer */}
-        <footer className="w-full border-t border-slate-900/90 bg-slate-950/60 py-4 mt-auto text-xs text-slate-500">
+        <footer className="w-full border-t border-zinc-200 bg-white py-4 mt-auto text-xs text-zinc-500">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2">
             <div className="flex items-center space-x-2">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400/80" />
-              <span>BUP CSE Fest 2026 — Smart Campus Energy Optimization Challenge</span>
+              <ShieldCheck className="w-4 h-4 text-emerald-600" />
+              <span className="font-medium text-zinc-700">
+                BUP CSE Fest 2026 — Smart Campus Energy Optimization Challenge
+              </span>
             </div>
-            <div className="font-mono text-slate-600">
+            <div className="font-mono text-zinc-500">
               Person 1 (Frontend &amp; DevOps) • Next.js 15 Standalone
             </div>
           </div>

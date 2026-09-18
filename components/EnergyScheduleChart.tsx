@@ -10,7 +10,6 @@ import {
   YAxis,
   Tooltip,
   CartesianGrid,
-  Legend,
 } from 'recharts';
 import { HourlyPlanItem, HourlyInputItem } from '@/lib/types';
 import {
@@ -87,121 +86,121 @@ export function EnergyScheduleChart({
     };
   });
 
-  // Custom Glassmorphic Tooltip
+  // Floating High-Contrast Enterprise Tooltip
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       const isBalanced = data.balance_diff <= 0.01;
 
       return (
-        <div className="glass-panel bg-slate-950/95 border border-slate-700/80 p-4 rounded-xl shadow-2xl space-y-3 min-w-[260px] text-xs">
+        <div className="bg-white border border-zinc-200 rounded-xl shadow-xl p-4 space-y-3 min-w-[270px] text-zinc-900 text-xs font-sans">
           {/* Tooltip Header */}
-          <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-            <div className="flex items-center space-x-1.5">
-              <Activity className="w-3.5 h-3.5 text-cyan-400" />
-              <span className="font-mono font-bold text-slate-100 text-sm">{data.hourLabel}</span>
+          <div className="flex items-center justify-between pb-2 border-b border-zinc-100">
+            <div className="flex items-center space-x-2">
+              <Activity className="w-3.5 h-3.5 text-blue-600" />
+              <span className="font-mono font-bold text-zinc-950 text-sm">{data.hourLabel}</span>
             </div>
-            <span className="font-mono text-cyan-300 bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-800/60">
+            <span className="font-mono font-bold text-zinc-800 bg-zinc-100 px-2 py-0.5 rounded border border-zinc-200">
               {data.tariff_bdt_per_kwh.toFixed(2)} BDT/kWh
             </span>
           </div>
 
           {/* Generation Supply Breakdown */}
           <div className="space-y-1.5">
-            <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">
-              Generation &amp; Supply Stack
+            <div className="text-[10px] font-mono font-bold text-zinc-400 uppercase tracking-wider">
+              Supply Stack (Generation &amp; Storage)
             </div>
 
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-1.5 text-emerald-400">
-                <SunMedium className="w-3.5 h-3.5" />
+              <div className="flex items-center space-x-1.5 text-emerald-700 font-medium">
+                <SunMedium className="w-3.5 h-3.5 text-emerald-600" />
                 <span>Solar PV Used:</span>
               </div>
-              <span className="font-mono text-slate-200 font-semibold">
+              <span className="font-mono font-bold text-zinc-900">
                 {data.solar_used_kwh.toFixed(2)} kWh
               </span>
             </div>
 
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-1.5 text-cyan-400">
-                <Power className="w-3.5 h-3.5" />
+              <div className="flex items-center space-x-1.5 text-blue-700 font-medium">
+                <Power className="w-3.5 h-3.5 text-blue-600" />
                 <span>Grid Import:</span>
               </div>
-              <span className="font-mono text-slate-200 font-semibold">
+              <span className="font-mono font-bold text-zinc-900">
                 {data.grid_kwh.toFixed(2)} kWh{' '}
-                <span className="text-slate-400 font-normal">({data.hourly_cost_bdt.toFixed(2)} BDT)</span>
+                <span className="text-zinc-500 font-normal">({data.hourly_cost_bdt.toFixed(2)} BDT)</span>
               </span>
             </div>
 
             {data.battery_discharge_kwh > 0 && (
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-1.5 text-amber-400">
-                  <BatteryCharging className="w-3.5 h-3.5" />
+                <div className="flex items-center space-x-1.5 text-amber-700 font-medium">
+                  <BatteryCharging className="w-3.5 h-3.5 text-amber-600" />
                   <span>BESS Discharge:</span>
                 </div>
-                <span className="font-mono text-slate-200 font-semibold">
+                <span className="font-mono font-bold text-zinc-900">
                   {data.battery_discharge_kwh.toFixed(2)} kWh
                 </span>
               </div>
             )}
 
-            <div className="flex items-center justify-between pt-1 border-t border-slate-900 text-slate-300 font-mono">
-              <span>Total Supply:</span>
-              <span className="font-bold text-slate-100">{data.total_supply_kwh.toFixed(2)} kWh</span>
+            <div className="flex items-center justify-between pt-1 border-t border-zinc-100 text-zinc-700 font-mono text-[11px]">
+              <span className="font-semibold">Total Supply:</span>
+              <span className="font-extrabold text-zinc-950">{data.total_supply_kwh.toFixed(2)} kWh</span>
             </div>
           </div>
 
           {/* Demand & Consumption Breakdown */}
-          <div className="space-y-1.5 pt-2 border-t border-slate-800">
-            <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">
+          <div className="space-y-1.5 pt-2 border-t border-zinc-100">
+            <div className="text-[10px] font-mono font-bold text-zinc-400 uppercase tracking-wider">
               Campus Consumption Curve
             </div>
 
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-1.5 text-purple-400">
-                <TrendingUp className="w-3.5 h-3.5" />
+              <div className="flex items-center space-x-1.5 text-zinc-800 font-medium">
+                <TrendingUp className="w-3.5 h-3.5 text-zinc-700" />
                 <span>Campus Demand:</span>
               </div>
-              <span className="font-mono text-slate-200 font-semibold">
+              <span className="font-mono font-bold text-zinc-900">
                 {data.demand_kwh.toFixed(2)} kWh
               </span>
             </div>
 
             {data.battery_charge_kwh > 0 && (
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-1.5 text-amber-400">
-                  <BatteryCharging className="w-3.5 h-3.5" />
+                <div className="flex items-center space-x-1.5 text-amber-700 font-medium">
+                  <BatteryCharging className="w-3.5 h-3.5 text-amber-600" />
                   <span>BESS Charging:</span>
                 </div>
-                <span className="font-mono text-slate-200 font-semibold">
+                <span className="font-mono font-bold text-zinc-900">
                   {data.battery_charge_kwh.toFixed(2)} kWh
                 </span>
               </div>
             )}
 
-            <div className="flex items-center justify-between pt-1 border-t border-slate-900 text-slate-300 font-mono">
-              <span>Total Load:</span>
-              <span className="font-bold text-slate-100">{data.total_load_kwh.toFixed(2)} kWh</span>
+            <div className="flex items-center justify-between pt-1 border-t border-zinc-100 text-zinc-700 font-mono text-[11px]">
+              <span className="font-semibold">Total Load:</span>
+              <span className="font-extrabold text-zinc-950">{data.total_load_kwh.toFixed(2)} kWh</span>
             </div>
           </div>
 
           {/* Conservation Check & Battery State Footer */}
-          <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px]">
+          <div className="pt-2 border-t border-zinc-100 flex items-center justify-between text-[11px]">
             <div className="flex items-center space-x-1">
               {isBalanced ? (
                 <>
-                  <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-                  <span className="text-emerald-400 font-mono">Balanced Identity</span>
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  <span className="text-emerald-700 font-mono font-semibold">Identity Balanced</span>
                 </>
               ) : (
                 <>
-                  <AlertCircle className="w-3 h-3 text-rose-400" />
-                  <span className="text-rose-400 font-mono">Diff: {data.balance_diff} kWh</span>
+                  <AlertCircle className="w-3.5 h-3.5 text-rose-600" />
+                  <span className="text-rose-700 font-mono font-semibold">Δ {data.balance_diff} kWh</span>
                 </>
               )}
             </div>
-            <div className="text-slate-400 font-mono">
-              BESS SoC: <span className="text-amber-400">{data.battery_energy_after_kwh.toFixed(1)} kWh</span>
+            <div className="text-zinc-500 font-mono">
+              BESS: <span className="font-bold text-zinc-900">{data.battery_energy_after_kwh.toFixed(1)} kWh</span>
             </div>
           </div>
         </div>
@@ -211,21 +210,21 @@ export function EnergyScheduleChart({
   };
 
   return (
-    <div className="glass-panel rounded-2xl p-5 sm:p-6 border border-slate-800 bg-slate-900/60 shadow-xl space-y-5">
+    <div className="bg-white rounded-xl p-5 sm:p-6 border border-zinc-200 shadow-sm space-y-5">
       {/* Chart Header & Stream Controls */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center space-x-2">
-            <Layers className="w-4 h-4 text-cyan-400" />
-            <h2 className="text-base sm:text-lg font-bold text-slate-100">
+            <Layers className="w-4 h-4 text-zinc-900" />
+            <h2 className="text-base sm:text-lg font-bold text-zinc-950 tracking-tight">
               24-Hour Energy Dispatch Schedule
             </h2>
-            <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+            <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-700 border border-zinc-200">
               Stacked Supply vs. Campus Demand
             </span>
           </div>
-          <p className="text-xs text-slate-400">
-            Real-time balance between Solar PV, Grid Import, Battery Arbitrage, and Academic Facilities Load.
+          <p className="text-xs text-zinc-500">
+            Real-time balance identity between Solar PV, Grid Import, Battery Arbitrage, and Academic Facilities Load.
           </p>
         </div>
 
@@ -236,11 +235,11 @@ export function EnergyScheduleChart({
             onClick={() => setShowSolar(!showSolar)}
             className={`inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${
               showSolar
-                ? 'bg-emerald-950/70 border-emerald-500/60 text-emerald-300 shadow-sm shadow-emerald-950'
-                : 'bg-slate-950/50 border-slate-800 text-slate-500 line-through'
+                ? 'bg-white border-zinc-300 text-zinc-800 shadow-sm ring-1 ring-emerald-500/30'
+                : 'bg-zinc-100 border-zinc-200 text-zinc-400 line-through'
             }`}
           >
-            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#059669]" />
             <span>Solar Supply</span>
           </button>
 
@@ -249,11 +248,11 @@ export function EnergyScheduleChart({
             onClick={() => setShowGrid(!showGrid)}
             className={`inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${
               showGrid
-                ? 'bg-cyan-950/70 border-cyan-500/60 text-cyan-300 shadow-sm shadow-cyan-950'
-                : 'bg-slate-950/50 border-slate-800 text-slate-500 line-through'
+                ? 'bg-white border-zinc-300 text-zinc-800 shadow-sm ring-1 ring-blue-500/30'
+                : 'bg-zinc-100 border-zinc-200 text-zinc-400 line-through'
             }`}
           >
-            <span className="w-2 h-2 rounded-full bg-cyan-400" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#2563eb]" />
             <span>Grid Import</span>
           </button>
 
@@ -262,12 +261,12 @@ export function EnergyScheduleChart({
             onClick={() => setShowBattery(!showBattery)}
             className={`inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${
               showBattery
-                ? 'bg-amber-950/70 border-amber-500/60 text-amber-300 shadow-sm shadow-amber-950'
-                : 'bg-slate-950/50 border-slate-800 text-slate-500 line-through'
+                ? 'bg-white border-zinc-300 text-zinc-800 shadow-sm ring-1 ring-amber-500/30'
+                : 'bg-zinc-100 border-zinc-200 text-zinc-400 line-through'
             }`}
           >
-            <span className="w-2 h-2 rounded-full bg-amber-400" />
-            <span>Battery Storage</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-[#d97706]" />
+            <span>Battery Discharge</span>
           </button>
 
           {/* Campus Demand Toggle */}
@@ -275,11 +274,11 @@ export function EnergyScheduleChart({
             onClick={() => setShowDemand(!showDemand)}
             className={`inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${
               showDemand
-                ? 'bg-purple-950/70 border-purple-500/60 text-purple-300 shadow-sm shadow-purple-950'
-                : 'bg-slate-950/50 border-slate-800 text-slate-500 line-through'
+                ? 'bg-white border-zinc-300 text-zinc-800 shadow-sm ring-1 ring-zinc-900/30'
+                : 'bg-zinc-100 border-zinc-200 text-zinc-400 line-through'
             }`}
           >
-            <span className="w-2 h-2 rounded-full bg-purple-400" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#09090b]" />
             <span>Campus Demand</span>
           </button>
 
@@ -288,12 +287,12 @@ export function EnergyScheduleChart({
             onClick={() => setShowTotalLoad(!showTotalLoad)}
             className={`inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${
               showTotalLoad
-                ? 'bg-rose-950/70 border-rose-500/60 text-rose-300 shadow-sm shadow-rose-950'
-                : 'bg-slate-950/50 border-slate-800 text-slate-500 line-through'
+                ? 'bg-white border-zinc-300 text-zinc-800 shadow-sm ring-1 ring-rose-500/30'
+                : 'bg-zinc-100 border-zinc-200 text-zinc-400 line-through'
             }`}
           >
-            <span className="w-2 h-2 rounded-full bg-rose-400" />
-            <span>Total Load Curve</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-[#e11d48]" />
+            <span>Total Load (with Charge)</span>
           </button>
         </div>
       </div>
@@ -301,17 +300,17 @@ export function EnergyScheduleChart({
       {/* Chart Canvas Area */}
       <div className="relative w-full h-[440px] pt-4">
         {isLoading && (
-          <div className="absolute inset-0 z-20 flex items-center justify-center bg-slate-950/60 backdrop-blur-sm rounded-xl">
-            <div className="flex items-center space-x-2 text-cyan-400 font-mono text-sm">
-              <Loader2 className="w-5 h-5 animate-spin" />
+          <div className="absolute inset-0 z-20 flex items-center justify-center bg-white/70 backdrop-blur-sm rounded-xl">
+            <div className="flex items-center space-x-2 text-zinc-900 font-mono text-sm font-semibold">
+              <Loader2 className="w-5 h-5 animate-spin text-zinc-950" />
               <span>Recalculating Energy Schedule...</span>
             </div>
           </div>
         )}
 
         {!isMounted ? (
-          <div className="w-full h-full flex items-center justify-center bg-slate-950/40 rounded-xl border border-slate-800 animate-pulse">
-            <span className="text-xs font-mono text-slate-500">Initializing Microgrid Canvas...</span>
+          <div className="w-full h-full flex items-center justify-center bg-zinc-50 rounded-xl border border-zinc-200 animate-pulse">
+            <span className="text-xs font-mono text-zinc-400">Initializing Microgrid Canvas...</span>
           </div>
         ) : (
           <ResponsiveContainer width="100%" height="100%">
@@ -319,52 +318,39 @@ export function EnergyScheduleChart({
               data={chartData}
               margin={{ top: 10, right: 10, left: -15, bottom: 20 }}
             >
-              <defs>
-                <linearGradient id="solarGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#10b981" stopOpacity={0.9} />
-                  <stop offset="100%" stopColor="#059669" stopOpacity={0.65} />
-                </linearGradient>
-                <linearGradient id="gridGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#06b6d4" stopOpacity={0.9} />
-                  <stop offset="100%" stopColor="#0891b2" stopOpacity={0.65} />
-                </linearGradient>
-                <linearGradient id="batteryGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#f59e0b" stopOpacity={0.9} />
-                  <stop offset="100%" stopColor="#d97706" stopOpacity={0.65} />
-                </linearGradient>
-              </defs>
-
+              {/* Minimalist Light Gridlines */}
               <CartesianGrid
                 strokeDasharray="3 3"
-                stroke="#1e293b"
+                stroke="#f4f4f5"
                 vertical={false}
-                opacity={0.7}
               />
 
+              {/* X-Axis: Sharp Dark Gray Ticks */}
               <XAxis
                 dataKey="hourLabel"
-                stroke="#64748b"
-                tick={{ fill: '#94a3b8', fontSize: 11 }}
-                tickLine={{ stroke: '#334155' }}
-                axisLine={{ stroke: '#334155' }}
+                stroke="#d4d4d8"
+                tick={{ fill: '#71717a', fontSize: 11, fontWeight: 500 }}
+                tickLine={{ stroke: '#e4e4e7' }}
+                axisLine={{ stroke: '#e4e4e7' }}
               />
 
+              {/* Y-Axis: Sharp Dark Gray Ticks */}
               <YAxis
-                stroke="#64748b"
-                tick={{ fill: '#94a3b8', fontSize: 11 }}
-                tickLine={{ stroke: '#334155' }}
-                axisLine={{ stroke: '#334155' }}
+                stroke="#d4d4d8"
+                tick={{ fill: '#71717a', fontSize: 11, fontWeight: 500 }}
+                tickLine={{ stroke: '#e4e4e7' }}
+                axisLine={{ stroke: '#e4e4e7' }}
                 unit=" kWh"
               />
 
               <Tooltip content={<CustomTooltip />} />
 
-              {/* Stacked Supply Bars */}
+              {/* Stacked Supply Bars — Solid Industrial Colors */}
               <Bar
                 dataKey="solar_used_kwh"
-                name="Solar Used"
+                name="Solar PV Used"
                 stackId="supply"
-                fill="url(#solarGradient)"
+                fill="#059669"
                 hide={!showSolar}
                 radius={[0, 0, 0, 0]}
               />
@@ -373,7 +359,7 @@ export function EnergyScheduleChart({
                 dataKey="grid_kwh"
                 name="Grid Import"
                 stackId="supply"
-                fill="url(#gridGradient)"
+                fill="#2563eb"
                 hide={!showGrid}
                 radius={[0, 0, 0, 0]}
               />
@@ -382,28 +368,29 @@ export function EnergyScheduleChart({
                 dataKey="battery_discharge_kwh"
                 name="Battery Discharged"
                 stackId="supply"
-                fill="url(#batteryGradient)"
+                fill="#d97706"
                 hide={!showBattery}
                 radius={[2, 2, 0, 0]}
               />
 
-              {/* Consumption Overlay Lines */}
+              {/* Campus Demand Line — Solid Carbon Black */}
               <Line
                 type="monotone"
                 dataKey="demand_kwh"
                 name="Campus Demand"
-                stroke="#c084fc"
+                stroke="#09090b"
                 strokeWidth={3}
-                dot={{ fill: '#a855f7', stroke: '#c084fc', strokeWidth: 1.5, r: 3 }}
-                activeDot={{ r: 5, fill: '#e9d5ff' }}
+                dot={{ fill: '#09090b', stroke: '#ffffff', strokeWidth: 1.5, r: 3 }}
+                activeDot={{ r: 5, fill: '#09090b' }}
                 hide={!showDemand}
               />
 
+              {/* Total Load Line — Dashed Crimson Ruby */}
               <Line
                 type="monotone"
                 dataKey="total_load_kwh"
-                name="Total Load (Demand + Charge)"
-                stroke="#f43f5e"
+                name="Total Load (with BESS Charge)"
+                stroke="#e11d48"
                 strokeWidth={2}
                 strokeDasharray="4 4"
                 dot={false}
@@ -415,32 +402,32 @@ export function EnergyScheduleChart({
       </div>
 
       {/* Interactive Legend Footnote */}
-      <div className="flex flex-wrap items-center justify-between text-xs text-slate-400 pt-2 border-t border-slate-800/60 font-mono">
-        <div className="flex items-center space-x-4">
+      <div className="flex flex-wrap items-center justify-between text-xs text-zinc-600 pt-3 border-t border-zinc-100 font-mono">
+        <div className="flex flex-wrap items-center gap-4">
           <span className="flex items-center space-x-1.5">
-            <span className="w-2.5 h-2.5 bg-emerald-500 rounded-sm inline-block" />
-            <span>Solar PV</span>
+            <span className="w-2.5 h-2.5 bg-[#059669] rounded-sm inline-block" />
+            <span>Solar PV (#059669)</span>
           </span>
           <span className="flex items-center space-x-1.5">
-            <span className="w-2.5 h-2.5 bg-cyan-500 rounded-sm inline-block" />
-            <span>Grid Import</span>
+            <span className="w-2.5 h-2.5 bg-[#2563eb] rounded-sm inline-block" />
+            <span>Grid Import (#2563eb)</span>
           </span>
           <span className="flex items-center space-x-1.5">
-            <span className="w-2.5 h-2.5 bg-amber-500 rounded-sm inline-block" />
-            <span>Battery Discharge</span>
+            <span className="w-2.5 h-2.5 bg-[#d97706] rounded-sm inline-block" />
+            <span>Battery Discharge (#d97706)</span>
           </span>
           <span className="flex items-center space-x-1.5">
-            <span className="w-3 h-0.5 bg-purple-400 inline-block" />
-            <span>Campus Demand</span>
+            <span className="w-3.5 h-0.5 bg-[#09090b] inline-block" />
+            <span>Campus Demand (#09090b)</span>
           </span>
           <span className="flex items-center space-x-1.5">
-            <span className="w-3 h-0.5 bg-rose-400 border-t border-dashed inline-block" />
-            <span>Total Load (with BESS Charge)</span>
+            <span className="w-3.5 h-0.5 bg-[#e11d48] border-t border-dashed inline-block" />
+            <span>Total Load Curve (#e11d48)</span>
           </span>
         </div>
 
-        <div className="text-slate-500 mt-2 sm:mt-0">
-          Identity: Grid + Solar + Discharge = Demand + Charge
+        <div className="text-zinc-500 font-semibold mt-2 sm:mt-0">
+          Conservation Law: Grid + Solar + Discharge = Demand + Charge
         </div>
       </div>
     </div>

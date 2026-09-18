@@ -333,3 +333,24 @@ If Task 1.8 needs to be reverted:
   * `npx tsc --noEmit` -> Exit code 0 (Zero errors).
 - **Rollback Instructions**:
   * Restore previous conflicting file snapshots via git or git stash.
+
+---
+
+## [Task 1.10 / DESIGN OVERHAUL] — Enterprise Industrial Microgrid Operations Center
+- **Timestamp**: 2026-09-18 23:02 (Local)
+- **Files Modified**:
+  * `app/globals.css`: Switched to `color-scheme: light`; background `#fafafa`, text `#09090b`, clean enterprise light panels with micro-shadows, light scrollbars.
+  * `tailwind.config.ts`: Added canvas colors (`DEFAULT: #fafafa`, `card: #ffffff`, `border: #e4e4e7`, `muted: #f4f4f5`), industrial color standard palette (`solar: #059669`, `grid: #2563eb`, `battery: #d97706`, `demand: #09090b`), and micro-shadow tokens.
+  * `app/layout.tsx`: Redesigned executive navigation header with pure solid white background, high-contrast black icon badge, "Smart Campus Energy Dispatch" title, pill badge, emerald pulsing live status badge, and light footer.
+  * `components/CostSummaryCards.tsx`: Converted into pure white architectural cards with uppercase micro-headers, 4xl bold metric readouts (`font-mono tabular-nums`), BDT currency notation, and corporate neutrality verification badge.
+  * `components/EnergyScheduleChart.tsx`: Overhauled Recharts visualization with minimalist light gridlines (`#f4f4f5`), dark gray axis ticks (`#71717a`), industrial editorial standard colors (`Solar: #059669`, `Grid: #2563eb`, `BESS: #d97706`, `Demand: #09090b`, `Load: #e11d48`), white pill toggles, and floating white tooltip.
+  * `components/BatterySocChart.tsx`: Pure white card, deep forest emerald curve (`#059669`), subtle emerald gradient fill, crisp dashed red/amber reference lines, and live bounds footer.
+  * `components/SamplePayloadSelector.tsx`: High-contrast segmented scenario selector, authoritative executive CTA button (`bg-zinc-950 hover:bg-zinc-800 text-white font-bold`), and light gray JSON viewer.
+  * `components/DirectiveTable.tsx`: Pure white container, 4px colored left border stripes (`solar_reduction: amber`, `minimum_battery_reserve: purple`, `no_charge/discharge: rose`, `max_grid: blue`), quotation block for operator notes, and white hour badges.
+  * `app/page.tsx`: Segmented navigation tabs (`bg-zinc-100` container, active white tab with shadow), high-contrast hero banner, strategy banner, and light JSON telemetry inspector.
+- **Verification Commands Executed & Results**:
+  * `npx tsc --noEmit` -> Exit code 0 (Zero errors).
+  * `npm run build` -> Exit code 0 (Successfully compiled all routes: `/`, `/health`, `/optimize-energy`).
+- **Rollback Instructions**:
+  * Revert git commits or restore previous versions of files in `app/` and `components/`.
+

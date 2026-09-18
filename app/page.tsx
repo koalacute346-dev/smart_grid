@@ -20,7 +20,6 @@ import {
   FileText,
   FileCode,
   CheckCircle2,
-  AlertCircle,
   Copy,
   Check,
   Layers,
@@ -124,9 +123,9 @@ export default function UnifiedOperationsDashboard() {
       label: 'Solar Photovoltaic',
       code: 'solar_used_kwh',
       badge: 'Renewable Supply',
-      borderClass: 'border-emerald-500/30',
-      bgClass: 'bg-emerald-950/20',
-      textClass: 'text-emerald-400',
+      borderClass: 'border-emerald-200',
+      bgClass: 'bg-emerald-50/50',
+      textClass: 'text-emerald-700',
       icon: SunMedium,
       desc: 'Clean on-site solar generation prioritized before grid import.',
     },
@@ -134,9 +133,9 @@ export default function UnifiedOperationsDashboard() {
       label: 'National Grid Import',
       code: 'grid_kwh',
       badge: 'Grid Utility',
-      borderClass: 'border-cyan-500/30',
-      bgClass: 'bg-cyan-950/20',
-      textClass: 'text-cyan-400',
+      borderClass: 'border-blue-200',
+      bgClass: 'bg-blue-50/50',
+      textClass: 'text-blue-700',
       icon: Power,
       desc: 'ToU-optimized campus grid import respecting contractual tariffs.',
     },
@@ -144,9 +143,9 @@ export default function UnifiedOperationsDashboard() {
       label: 'Battery ESS (BESS)',
       code: 'charge / discharge',
       badge: 'Storage & Arbitrage',
-      borderClass: 'border-amber-500/30',
-      bgClass: 'bg-amber-950/20',
-      textClass: 'text-amber-400',
+      borderClass: 'border-amber-200',
+      bgClass: 'bg-amber-50/50',
+      textClass: 'text-amber-700',
       icon: BatteryCharging,
       desc: 'BESS arbitrage, peak shaving, and mandated emergency reserve buffer.',
     },
@@ -154,9 +153,9 @@ export default function UnifiedOperationsDashboard() {
       label: 'Campus Aggregate Demand',
       code: 'demand_kwh',
       badge: 'Facility Load',
-      borderClass: 'border-purple-500/30',
-      bgClass: 'bg-purple-950/20',
-      textClass: 'text-purple-400',
+      borderClass: 'border-zinc-300',
+      bgClass: 'bg-zinc-100/60',
+      textClass: 'text-zinc-900',
       icon: TrendingUp,
       desc: 'Dynamic 24-hour academic and laboratory electrical consumption profile.',
     },
@@ -167,7 +166,7 @@ export default function UnifiedOperationsDashboard() {
       task: 'Task 1.1',
       title: 'UI Foundations & Configuration',
       status: 'Operational',
-      desc: 'Next.js 15 Standalone, Tailwind CSS tokens, PostCSS, dark glassmorphic shell, and executive header.',
+      desc: 'Next.js 15 Standalone, Tailwind CSS tokens, PostCSS, high-contrast light shell, and executive header.',
       done: true,
     },
     {
@@ -188,7 +187,7 @@ export default function UnifiedOperationsDashboard() {
       task: 'Task 1.4',
       title: 'State of Charge & Cost Dashboard',
       status: 'Operational',
-      desc: 'Dual-bounded SoC area trajectory, 4 glassmorphic KPI summary cards with neutrality verification badge.',
+      desc: 'Dual-bounded SoC area trajectory, 4 pure white KPI summary cards with neutrality verification badge.',
       done: true,
     },
     {
@@ -213,37 +212,34 @@ export default function UnifiedOperationsDashboard() {
 
   return (
     <div className="space-y-8">
-      {/* Top Banner / Hero Header */}
-      <section className="relative overflow-hidden rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-900/90 via-slate-900/50 to-slate-950 p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
-        <div className="absolute top-0 right-0 -mt-8 -mr-8 w-64 h-64 rounded-full bg-cyan-500/10 blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 -mb-8 -ml-8 w-64 h-64 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
-
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+      {/* Top Banner / Hero Header: Pure White Architectural Card */}
+      <section className="relative overflow-hidden rounded-xl border border-zinc-200 bg-white p-6 sm:p-8 shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="space-y-3 max-w-2xl">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-950/80 text-emerald-400 border border-emerald-800/60 shadow-sm">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+              <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-zinc-100 text-zinc-800 border border-zinc-200">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                 <span>Microgrid Command Center v1.0</span>
               </span>
 
               {/* Execution Engine Status Badge */}
               {executionSource === 'LIVE_API' ? (
-                <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium bg-cyan-950/80 text-cyan-300 border border-cyan-800/60 shadow-sm">
-                  <Server className="w-3 h-3 text-cyan-400" />
+                <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-blue-50 text-blue-800 border border-blue-200 shadow-xs">
+                  <Server className="w-3.5 h-3.5 text-blue-600" />
                   <span>Engine: LIVE BACKEND API</span>
                 </span>
               ) : (
-                <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium bg-amber-950/80 text-amber-300 border border-amber-800/60 shadow-sm">
-                  <Activity className="w-3 h-3 text-amber-400" />
+                <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-amber-50 text-amber-800 border border-amber-200 shadow-xs">
+                  <Activity className="w-3.5 h-3.5 text-amber-600" />
                   <span>Engine: LOCAL MOCK DECOUPLED</span>
                 </span>
               )}
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-950">
               Campus Microgrid Energy Optimization Control Center
             </h1>
-            <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+            <p className="text-sm sm:text-base text-zinc-600 leading-relaxed font-normal">
               Autonomous linear programming dispatch schedule for university solar arrays, battery
               storage, and commercial grid import. Select scenarios, inspect AI directive interpretations,
               and evaluate 24-hour horizon telemetry.
@@ -251,15 +247,15 @@ export default function UnifiedOperationsDashboard() {
           </div>
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-            <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 flex flex-col justify-center text-center sm:text-left">
-              <div className="text-xs text-slate-400 font-mono">SELECTED SCENARIO</div>
-              <div className="text-sm font-semibold text-emerald-400 font-mono truncate max-w-[170px]">
+            <div className="p-4 rounded-xl bg-zinc-50 border border-zinc-200 flex flex-col justify-center text-center sm:text-left">
+              <div className="text-xs text-zinc-500 font-mono font-medium">SELECTED SCENARIO</div>
+              <div className="text-sm font-bold text-zinc-950 font-mono truncate max-w-[170px]">
                 {selectedScenarioId}
               </div>
             </div>
-            <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 flex flex-col justify-center text-center sm:text-left">
-              <div className="text-xs text-slate-400 font-mono">LAST RUN</div>
-              <div className="text-sm font-semibold text-cyan-400 font-mono">
+            <div className="p-4 rounded-xl bg-zinc-50 border border-zinc-200 flex flex-col justify-center text-center sm:text-left">
+              <div className="text-xs text-zinc-500 font-mono font-medium">LAST RUN</div>
+              <div className="text-sm font-bold text-blue-700 font-mono">
                 {lastOptimizedTime}
               </div>
             </div>
@@ -287,31 +283,31 @@ export default function UnifiedOperationsDashboard() {
       />
 
       {/* Plan Strategy Banner */}
-      <div className="p-5 rounded-2xl border border-slate-800 bg-slate-900/70 backdrop-blur-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-lg">
+      <div className="p-5 rounded-xl border border-zinc-200 bg-white flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
         <div className="space-y-1 max-w-3xl">
-          <div className="flex items-center space-x-2 text-xs font-semibold text-emerald-400">
-            <BarChart3 className="w-4 h-4" />
+          <div className="flex items-center space-x-2 text-xs font-bold text-zinc-900">
+            <BarChart3 className="w-4 h-4 text-zinc-950" />
             <span className="uppercase tracking-wider">Active 24h Horizon Strategy</span>
           </div>
-          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">
+          <p className="text-xs sm:text-sm text-zinc-700 leading-relaxed font-sans font-medium">
             {currentResponse.plan_summary}
           </p>
         </div>
 
-        <div className="shrink-0 flex items-center space-x-2 text-xs font-mono text-slate-400 bg-slate-950/80 px-3 py-2 rounded-xl border border-slate-800">
-          <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+        <div className="shrink-0 flex items-center space-x-2 text-xs font-mono font-semibold text-zinc-700 bg-zinc-50 px-3 py-2 rounded-lg border border-zinc-200">
+          <Sparkles className="w-3.5 h-3.5 text-zinc-900" />
           <span>Status: 200 OK • 24 Timesteps</span>
         </div>
       </div>
 
-      {/* Navigation Tab Bar */}
-      <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-md">
+      {/* Segmented Navigation Tab Bar */}
+      <div className="bg-zinc-100 p-1 rounded-xl border border-zinc-200 inline-flex flex-wrap gap-1 shadow-xs">
         <button
           onClick={() => setActiveTab('dispatch')}
-          className={`flex-1 sm:flex-initial inline-flex items-center justify-center space-x-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all ${
+          className={`inline-flex items-center justify-center space-x-2 rounded-lg px-4 py-2 text-sm transition-all ${
             activeTab === 'dispatch'
-              ? 'bg-emerald-500 text-slate-950 font-semibold shadow-lg shadow-emerald-500/20'
-              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+              ? 'bg-white text-zinc-950 font-bold shadow-sm'
+              : 'text-zinc-600 hover:text-zinc-900 hover:bg-white/50'
           }`}
         >
           <Zap className="w-4 h-4" />
@@ -320,10 +316,10 @@ export default function UnifiedOperationsDashboard() {
 
         <button
           onClick={() => setActiveTab('battery')}
-          className={`flex-1 sm:flex-initial inline-flex items-center justify-center space-x-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all ${
+          className={`inline-flex items-center justify-center space-x-2 rounded-lg px-4 py-2 text-sm transition-all ${
             activeTab === 'battery'
-              ? 'bg-amber-500 text-slate-950 font-semibold shadow-lg shadow-amber-500/20'
-              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+              ? 'bg-white text-zinc-950 font-bold shadow-sm'
+              : 'text-zinc-600 hover:text-zinc-900 hover:bg-white/50'
           }`}
         >
           <Battery className="w-4 h-4" />
@@ -332,10 +328,10 @@ export default function UnifiedOperationsDashboard() {
 
         <button
           onClick={() => setActiveTab('directives')}
-          className={`flex-1 sm:flex-initial inline-flex items-center justify-center space-x-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all ${
+          className={`inline-flex items-center justify-center space-x-2 rounded-lg px-4 py-2 text-sm transition-all ${
             activeTab === 'directives'
-              ? 'bg-purple-500 text-slate-950 font-semibold shadow-lg shadow-purple-500/20'
-              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+              ? 'bg-white text-zinc-950 font-bold shadow-sm'
+              : 'text-zinc-600 hover:text-zinc-900 hover:bg-white/50'
           }`}
         >
           <FileText className="w-4 h-4" />
@@ -344,10 +340,10 @@ export default function UnifiedOperationsDashboard() {
 
         <button
           onClick={() => setActiveTab('json')}
-          className={`flex-1 sm:flex-initial inline-flex items-center justify-center space-x-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all ${
+          className={`inline-flex items-center justify-center space-x-2 rounded-lg px-4 py-2 text-sm transition-all ${
             activeTab === 'json'
-              ? 'bg-cyan-500 text-slate-950 font-semibold shadow-lg shadow-cyan-500/20'
-              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+              ? 'bg-white text-zinc-950 font-bold shadow-sm'
+              : 'text-zinc-600 hover:text-zinc-900 hover:bg-white/50'
           }`}
         >
           <FileCode className="w-4 h-4" />
@@ -356,7 +352,7 @@ export default function UnifiedOperationsDashboard() {
       </div>
 
       {/* Dynamic Tab Viewport */}
-      <div className="transition-all duration-300">
+      <div className="transition-all duration-200">
         {/* Tab 1: 24h Energy Dispatch Stacked Chart */}
         {activeTab === 'dispatch' && (
           <EnergyScheduleChart
@@ -388,63 +384,63 @@ export default function UnifiedOperationsDashboard() {
         {activeTab === 'json' && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Input Payload Column */}
-            <div className="glass-panel p-5 rounded-2xl border border-slate-800 bg-slate-900/60 shadow-xl space-y-3">
-              <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+            <div className="bg-white p-5 rounded-xl border border-zinc-200 shadow-sm space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-zinc-100">
                 <div className="flex items-center space-x-2">
-                  <FileCode className="w-4 h-4 text-cyan-400" />
-                  <span className="font-mono font-semibold text-slate-200 text-xs sm:text-sm">
+                  <FileCode className="w-4 h-4 text-blue-600" />
+                  <span className="font-mono font-bold text-zinc-950 text-xs sm:text-sm">
                     OptimizeEnergyInput (Request)
                   </span>
                 </div>
                 <button
                   onClick={handleCopyInputJson}
-                  className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 text-slate-300 text-xs font-mono border border-slate-700 transition-colors"
+                  className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-zinc-100 hover:bg-zinc-200 text-zinc-800 text-xs font-mono border border-zinc-300 transition-colors shadow-xs"
                 >
                   {copiedInput ? (
                     <>
-                      <Check className="w-3 h-3 text-emerald-400" />
-                      <span className="text-emerald-400">Copied</span>
+                      <Check className="w-3 h-3 text-emerald-600" />
+                      <span className="text-emerald-700 font-semibold">Copied</span>
                     </>
                   ) : (
                     <>
-                      <Copy className="w-3 h-3 text-slate-400" />
+                      <Copy className="w-3 h-3 text-zinc-500" />
                       <span>Copy Input</span>
                     </>
                   )}
                 </button>
               </div>
-              <pre className="text-xs font-mono text-cyan-300 bg-slate-950 p-4 rounded-xl border border-slate-900 overflow-x-auto max-h-[500px] custom-scrollbar">
+              <pre className="text-xs font-mono text-zinc-800 bg-zinc-50 p-4 rounded-xl border border-zinc-200 overflow-x-auto max-h-[500px]">
                 {JSON.stringify(currentInput, null, 2)}
               </pre>
             </div>
 
             {/* Output Response Column */}
-            <div className="glass-panel p-5 rounded-2xl border border-slate-800 bg-slate-900/60 shadow-xl space-y-3">
-              <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+            <div className="bg-white p-5 rounded-xl border border-zinc-200 shadow-sm space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-zinc-100">
                 <div className="flex items-center space-x-2">
-                  <FileCode className="w-4 h-4 text-emerald-400" />
-                  <span className="font-mono font-semibold text-slate-200 text-xs sm:text-sm">
+                  <FileCode className="w-4 h-4 text-emerald-600" />
+                  <span className="font-mono font-bold text-zinc-950 text-xs sm:text-sm">
                     OptimizeEnergyResponse (Solution)
                   </span>
                 </div>
                 <button
                   onClick={handleCopyOutputJson}
-                  className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 text-slate-300 text-xs font-mono border border-slate-700 transition-colors"
+                  className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-zinc-100 hover:bg-zinc-200 text-zinc-800 text-xs font-mono border border-zinc-300 transition-colors shadow-xs"
                 >
                   {copiedOutput ? (
                     <>
-                      <Check className="w-3 h-3 text-emerald-400" />
-                      <span className="text-emerald-400">Copied</span>
+                      <Check className="w-3 h-3 text-emerald-600" />
+                      <span className="text-emerald-700 font-semibold">Copied</span>
                     </>
                   ) : (
                     <>
-                      <Copy className="w-3 h-3 text-slate-400" />
+                      <Copy className="w-3 h-3 text-zinc-500" />
                       <span>Copy Output</span>
                     </>
                   )}
                 </button>
               </div>
-              <pre className="text-xs font-mono text-emerald-300 bg-slate-950 p-4 rounded-xl border border-slate-900 overflow-x-auto max-h-[500px] custom-scrollbar">
+              <pre className="text-xs font-mono text-zinc-800 bg-zinc-50 p-4 rounded-xl border border-zinc-200 overflow-x-auto max-h-[500px]">
                 {JSON.stringify(currentResponse, null, 2)}
               </pre>
             </div>
@@ -456,10 +452,10 @@ export default function UnifiedOperationsDashboard() {
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Layers className="w-4 h-4 text-cyan-400" />
-            <h2 className="text-base font-semibold text-slate-200">Microgrid Energy Stream Tokens</h2>
+            <Layers className="w-4 h-4 text-zinc-900" />
+            <h2 className="text-base font-bold text-zinc-950 tracking-tight">Microgrid Energy Stream Tokens</h2>
           </div>
-          <span className="text-xs text-slate-500 font-mono">Pre-configured theme tokens</span>
+          <span className="text-xs text-zinc-500 font-mono">Pre-configured theme tokens</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -468,21 +464,21 @@ export default function UnifiedOperationsDashboard() {
             return (
               <div
                 key={token.code}
-                className={`p-5 rounded-xl border ${token.borderClass} ${token.bgClass} backdrop-blur-md flex flex-col justify-between space-y-3 transition-all duration-200 hover:scale-[1.01]`}
+                className={`p-5 rounded-xl border ${token.borderClass} ${token.bgClass} flex flex-col justify-between space-y-3 transition-all duration-150 hover:border-zinc-300 shadow-sm`}
               >
                 <div className="flex items-center justify-between">
-                  <div className={`p-2.5 rounded-lg bg-slate-950/70 border border-slate-800 ${token.textClass}`}>
+                  <div className={`p-2 rounded-lg bg-white border border-zinc-200 shadow-xs ${token.textClass}`}>
                     <Icon className="w-5 h-5" />
                   </div>
-                  <span className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-slate-950/60 border border-slate-800 text-slate-300">
+                  <span className="text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md bg-white border border-zinc-200 text-zinc-700 shadow-xs">
                     {token.badge}
                   </span>
                 </div>
 
                 <div>
-                  <h3 className="font-semibold text-slate-100 text-sm">{token.label}</h3>
-                  <div className={`text-xs font-mono mt-0.5 ${token.textClass}`}>{token.code}</div>
-                  <p className="text-xs text-slate-400 mt-2 leading-relaxed">{token.desc}</p>
+                  <h3 className="font-bold text-zinc-950 text-sm tracking-tight">{token.label}</h3>
+                  <div className={`text-xs font-mono font-bold mt-0.5 ${token.textClass}`}>{token.code}</div>
+                  <p className="text-xs text-zinc-600 mt-2 leading-relaxed">{token.desc}</p>
                 </div>
               </div>
             );
@@ -494,39 +490,31 @@ export default function UnifiedOperationsDashboard() {
       <section id="system-docs" className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Terminal className="w-4 h-4 text-emerald-400" />
-            <h2 className="text-base font-semibold text-slate-200">Frontend &amp; DevOps Progression</h2>
+            <Terminal className="w-4 h-4 text-zinc-900" />
+            <h2 className="text-base font-bold text-zinc-950 tracking-tight">Frontend &amp; DevOps Progression</h2>
           </div>
-          <span className="text-xs text-slate-500 font-mono">Branch: feat/frontend-dashboard</span>
+          <span className="text-xs text-zinc-500 font-mono">Branch: feat/frontend-dashboard</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {milestones.map((m) => (
             <div
               key={m.task}
-              className={`p-5 rounded-xl border ${
-                m.done
-                  ? 'border-emerald-500/40 bg-slate-900/70'
-                  : 'border-slate-800/80 bg-slate-900/40'
-              } backdrop-blur-md flex flex-col justify-between space-y-2`}
+              className="p-5 rounded-xl border border-zinc-200 bg-white shadow-sm hover:border-zinc-300 flex flex-col justify-between space-y-2 transition-all"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-950 border border-slate-800 text-slate-300">
+                <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-zinc-100 border border-zinc-200 text-zinc-800">
                   {m.task}
                 </span>
                 <span
-                  className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                    m.done
-                      ? 'bg-emerald-950 text-emerald-400 border border-emerald-800/60'
-                      : 'bg-slate-800 text-slate-400 border border-slate-700'
-                  }`}
+                  className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 font-mono"
                 >
-                  {m.status}
+                  ✓ {m.status}
                 </span>
               </div>
               <div>
-                <h4 className="font-semibold text-slate-100 text-sm mt-1">{m.title}</h4>
-                <p className="text-xs text-slate-400 mt-1 leading-relaxed">{m.desc}</p>
+                <h4 className="font-bold text-zinc-950 text-sm mt-1">{m.title}</h4>
+                <p className="text-xs text-zinc-600 mt-1 leading-relaxed">{m.desc}</p>
               </div>
             </div>
           ))}
