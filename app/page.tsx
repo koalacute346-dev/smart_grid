@@ -15,27 +15,45 @@ import { EnergyScheduleChart } from '@/components/EnergyScheduleChart';
 import { BatterySocChart } from '@/components/BatterySocChart';
 import { DirectiveTable } from '@/components/DirectiveTable';
 import {
-  SunMedium,
-  BatteryCharging,
-  Power,
-  TrendingUp,
+  Zap,
+  Battery,
+  FileText,
+  FileCode,
   CheckCircle2,
-  Terminal,
+  AlertCircle,
+  Copy,
+  Check,
   Layers,
   BarChart3,
+  SunMedium,
+  Power,
+  BatteryCharging,
+  TrendingUp,
+  Terminal,
+  Activity,
+  Server,
   Sparkles,
 } from 'lucide-react';
 
-export default function DashboardPage() {
+type DashboardTab = 'dispatch' | 'battery' | 'directives' | 'json';
+type ExecutionSource = 'LIVE_API' | 'MOCK_ENGINE';
+
+export default function UnifiedOperationsDashboard() {
   const initialScenario = getMockScenario(DEFAULT_SCENARIO_ID);
 
   const [selectedScenarioId, setSelectedScenarioId] = useState<string>(initialScenario.id);
   const [currentInput, setCurrentInput] = useState<OptimizeEnergyInput>(initialScenario.input);
-  const [currentResponse, setCurrentResponse] = useState<OptimizeEnergyResponse | null>(
+  const [currentResponse, setCurrentResponse] = useState<OptimizeEnergyResponse>(
     initialScenario.expectedResponse
   );
-  const [isOptimizing, setIsOptimizing] = useState<boolean>(false);
-  const [lastOptimizedTime, setLastOptimizedTime] = useState<string>('Just now');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState<DashboardTab>('dispatch');
+  const [executionSource, setExecutionSource] = useState<ExecutionSource>('MOCK_ENGINE');
+  const [lastOptimizedTime, setLastOptimizedTime] = useState<string>('Pre-loaded (Baseline)');
+
+  // Copy state for JSON telemetry view
+  const [copiedInput, setCopiedInput] = useState(false);
+  const [copiedOutput, setCopiedOutput] = useState(false);
 
   const handleSelectScenario = (
     scenario: OptimizeEnergyInput,
@@ -44,19 +62,61 @@ export default function DashboardPage() {
     setSelectedScenarioId(scenario.scenario_id);
     setCurrentInput(scenario);
     setCurrentResponse(response);
+    setExecutionSource('MOCK_ENGINE');
   };
 
-  const handleExecuteOptimization = () => {
-    setIsOptimizing(true);
-    setTimeout(() => {
-      const activeMock = getMockScenario(selectedScenarioId);
-      setCurrentResponse(activeMock.expectedResponse);
-      setIsOptimizing(false);
+  const handleExecuteOptimization = async () => {
+    setIsLoading(true);
+    const startTime = Date.now();
+
+    try {
+      // Attempt live call to root endpoint POST /optimize-energy
+      const res = await fetch('/optimize-energy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(currentInput),
+      });
+
+      if (res.ok) {
+        const data: OptimizeEnergyResponse = await res.json();
+        setCurrentResponse(data);
+        setExecutionSource('LIVE_API');
+      } else {
+        throw new Error(`HTTP error ${res.status}`);
+      }
+    } catch (err) {
+      // Seamless graceful fallback to local mock engine for decoupled UI operation
+      console.warn(
+        '[Dashboard] Live backend unreachable, falling back seamlessly to verified mock engine:',
+        err
+      );
+      // Simulate 600ms network roundtrip if local
+      const elapsed = Date.now() - startTime;
+      if (elapsed < 600) {
+        await new Promise((resolve) => setTimeout(resolve, 600 - elapsed));
+      }
+      const mock = getMockScenario(selectedScenarioId);
+      setCurrentResponse(mock.expectedResponse);
+      setExecutionSource('MOCK_ENGINE');
+    } finally {
+      setIsLoading(false);
       const now = new Date();
       setLastOptimizedTime(
         now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
       );
-    }, 1000);
+    }
+  };
+
+  const handleCopyInputJson = () => {
+    navigator.clipboard.writeText(JSON.stringify(currentInput, null, 2));
+    setCopiedInput(true);
+    setTimeout(() => setCopiedInput(false), 2000);
+  };
+
+  const handleCopyOutputJson = () => {
+    navigator.clipboard.writeText(JSON.stringify(currentResponse, null, 2));
+    setCopiedOutput(true);
+    setTimeout(() => setCopiedOutput(false), 2000);
   };
 
   const semanticTokens = [
@@ -138,6 +198,13 @@ export default function DashboardPage() {
       desc: 'Audit table translating unstructured operator logs to physical LP mathematical constraints.',
       done: true,
     },
+    {
+      task: 'Task 1.6',
+      title: 'Unified Operations Dashboard',
+      status: 'Operational',
+      desc: 'Full command center layout with dual-mode API/mock execution, tab viewports, and raw JSON telemetry.',
+      done: true,
+    },
   ];
 
   const finalEnergyKwh =
@@ -146,24 +213,40 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      {/* Top Banner / Hero Overview */}
+      {/* Top Banner / Hero Header */}
       <section className="relative overflow-hidden rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-900/90 via-slate-900/50 to-slate-950 p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
         <div className="absolute top-0 right-0 -mt-8 -mr-8 w-64 h-64 rounded-full bg-cyan-500/10 blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 -mb-8 -ml-8 w-64 h-64 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="space-y-3 max-w-2xl">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-medium bg-emerald-950/70 text-emerald-400 border border-emerald-800/60">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Executive Dispatch &amp; Directive Telemetry Active</span>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-950/80 text-emerald-400 border border-emerald-800/60 shadow-sm">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Microgrid Command Center v1.0</span>
+              </span>
+
+              {/* Execution Engine Status Badge */}
+              {executionSource === 'LIVE_API' ? (
+                <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium bg-cyan-950/80 text-cyan-300 border border-cyan-800/60 shadow-sm">
+                  <Server className="w-3 h-3 text-cyan-400" />
+                  <span>Engine: LIVE BACKEND API</span>
+                </span>
+              ) : (
+                <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium bg-amber-950/80 text-amber-300 border border-amber-800/60 shadow-sm">
+                  <Activity className="w-3 h-3 text-amber-400" />
+                  <span>Engine: LOCAL MOCK DECOUPLED</span>
+                </span>
+              )}
             </div>
+
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
               Campus Microgrid Energy Optimization Control Center
             </h1>
             <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
               Autonomous linear programming dispatch schedule for university solar arrays, battery
-              storage, and grid import. Select evaluation scenarios below to simulate 24-hour horizon
-              dispatch.
+              storage, and commercial grid import. Select scenarios, inspect AI directive interpretations,
+              and evaluate 24-hour horizon telemetry.
             </p>
           </div>
 
@@ -184,73 +267,190 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      {/* Task 1.2: Scenario Selector Component */}
+      {/* Top Section: Cost & Energy Summary Cards */}
+      <CostSummaryCards
+        totalCostBdt={currentResponse.total_cost_bdt}
+        totalGridKwh={currentResponse.total_grid_kwh}
+        peakGridKwh={currentResponse.peak_grid_kwh}
+        initialEnergyKwh={currentInput.battery.initial_energy_kwh}
+        finalEnergyKwh={finalEnergyKwh}
+        batteryCapacityKwh={currentInput.battery.capacity_kwh}
+        isLoading={isLoading}
+      />
+
+      {/* Controller: Scenario Selector & Payload Configuration */}
       <SamplePayloadSelector
         selectedScenarioId={selectedScenarioId}
         onSelectScenario={handleSelectScenario}
         onExecute={handleExecuteOptimization}
-        isLoading={isOptimizing}
+        isLoading={isLoading}
       />
 
-      {/* Optimization Execution Results */}
-      {currentResponse && (
-        <section className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Sparkles className="w-4 h-4 text-emerald-400" />
-              <h2 className="text-base font-semibold text-slate-200">
-                Dispatch KPIs &amp; Physical Balance Verification
-              </h2>
-            </div>
-            <span className="text-xs text-slate-400 font-mono">
-              Status: 200 OK • Horizon: 24h
-            </span>
+      {/* Plan Strategy Banner */}
+      <div className="p-5 rounded-2xl border border-slate-800 bg-slate-900/70 backdrop-blur-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-lg">
+        <div className="space-y-1 max-w-3xl">
+          <div className="flex items-center space-x-2 text-xs font-semibold text-emerald-400">
+            <BarChart3 className="w-4 h-4" />
+            <span className="uppercase tracking-wider">Active 24h Horizon Strategy</span>
           </div>
+          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">
+            {currentResponse.plan_summary}
+          </p>
+        </div>
 
-          {/* Task 1.4: 4 Glassmorphic KPI Summary Cards */}
-          <CostSummaryCards
-            totalCostBdt={currentResponse.total_cost_bdt}
-            totalGridKwh={currentResponse.total_grid_kwh}
-            peakGridKwh={currentResponse.peak_grid_kwh}
-            initialEnergyKwh={currentInput.battery.initial_energy_kwh}
-            finalEnergyKwh={finalEnergyKwh}
-            batteryCapacityKwh={currentInput.battery.capacity_kwh}
-            isLoading={isOptimizing}
-          />
+        <div className="shrink-0 flex items-center space-x-2 text-xs font-mono text-slate-400 bg-slate-950/80 px-3 py-2 rounded-xl border border-slate-800">
+          <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+          <span>Status: 200 OK • 24 Timesteps</span>
+        </div>
+      </div>
 
-          {/* Task 1.3: Energy Schedule Stacked Bars & Campus Demand Line */}
+      {/* Navigation Tab Bar */}
+      <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-md">
+        <button
+          onClick={() => setActiveTab('dispatch')}
+          className={`flex-1 sm:flex-initial inline-flex items-center justify-center space-x-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all ${
+            activeTab === 'dispatch'
+              ? 'bg-emerald-500 text-slate-950 font-semibold shadow-lg shadow-emerald-500/20'
+              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+          }`}
+        >
+          <Zap className="w-4 h-4" />
+          <span>24h Energy Dispatch</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('battery')}
+          className={`flex-1 sm:flex-initial inline-flex items-center justify-center space-x-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all ${
+            activeTab === 'battery'
+              ? 'bg-amber-500 text-slate-950 font-semibold shadow-lg shadow-amber-500/20'
+              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+          }`}
+        >
+          <Battery className="w-4 h-4" />
+          <span>BESS State-of-Charge</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('directives')}
+          className={`flex-1 sm:flex-initial inline-flex items-center justify-center space-x-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all ${
+            activeTab === 'directives'
+              ? 'bg-purple-500 text-slate-950 font-semibold shadow-lg shadow-purple-500/20'
+              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+          }`}
+        >
+          <FileText className="w-4 h-4" />
+          <span>AI Directives &amp; Audit ({currentResponse.directive_interpretation.length})</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('json')}
+          className={`flex-1 sm:flex-initial inline-flex items-center justify-center space-x-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all ${
+            activeTab === 'json'
+              ? 'bg-cyan-500 text-slate-950 font-semibold shadow-lg shadow-cyan-500/20'
+              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+          }`}
+        >
+          <FileCode className="w-4 h-4" />
+          <span>Raw JSON Telemetry</span>
+        </button>
+      </div>
+
+      {/* Dynamic Tab Viewport */}
+      <div className="transition-all duration-300">
+        {/* Tab 1: 24h Energy Dispatch Stacked Chart */}
+        {activeTab === 'dispatch' && (
           <EnergyScheduleChart
             hourlyPlan={currentResponse.hourly_plan}
             hourlyInput={currentInput.hours}
-            isLoading={isOptimizing}
+            isLoading={isLoading}
           />
+        )}
 
-          {/* Task 1.4: Battery State-of-Charge (SoC) Area Trajectory Chart */}
+        {/* Tab 2: Battery State-of-Charge Area Chart */}
+        {activeTab === 'battery' && (
           <BatterySocChart
             hourlyPlan={currentResponse.hourly_plan}
             batteryConfig={currentInput.battery}
-            isLoading={isOptimizing}
+            isLoading={isLoading}
           />
+        )}
 
-          {/* Task 1.5: Directive Interpretation & Constraint Translation Audit Table */}
+        {/* Tab 3: Directive Interpretation & Constraint Translation Audit */}
+        {activeTab === 'directives' && (
           <DirectiveTable
             directives={currentResponse.directive_interpretation}
             rawNotes={currentInput.operator_notes}
-            isLoading={isOptimizing}
+            isLoading={isLoading}
           />
+        )}
 
-          {/* Plan Summary Strategy Card */}
-          <div className="p-5 rounded-xl border border-slate-800 bg-slate-900/70 backdrop-blur-md space-y-3">
-            <div className="flex items-center space-x-2 text-xs font-semibold text-slate-300">
-              <BarChart3 className="w-4 h-4 text-emerald-400" />
-              <span>DISPATCH PLAN STRATEGY</span>
+        {/* Tab 4: Side-by-Side Raw JSON Telemetry Inspector */}
+        {activeTab === 'json' && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Input Payload Column */}
+            <div className="glass-panel p-5 rounded-2xl border border-slate-800 bg-slate-900/60 shadow-xl space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+                <div className="flex items-center space-x-2">
+                  <FileCode className="w-4 h-4 text-cyan-400" />
+                  <span className="font-mono font-semibold text-slate-200 text-xs sm:text-sm">
+                    OptimizeEnergyInput (Request)
+                  </span>
+                </div>
+                <button
+                  onClick={handleCopyInputJson}
+                  className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 text-slate-300 text-xs font-mono border border-slate-700 transition-colors"
+                >
+                  {copiedInput ? (
+                    <>
+                      <Check className="w-3 h-3 text-emerald-400" />
+                      <span className="text-emerald-400">Copied</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3 h-3 text-slate-400" />
+                      <span>Copy Input</span>
+                    </>
+                  )}
+                </button>
+              </div>
+              <pre className="text-xs font-mono text-cyan-300 bg-slate-950 p-4 rounded-xl border border-slate-900 overflow-x-auto max-h-[500px] custom-scrollbar">
+                {JSON.stringify(currentInput, null, 2)}
+              </pre>
             </div>
-            <p className="text-sm text-slate-300 leading-relaxed font-sans">
-              {currentResponse.plan_summary}
-            </p>
+
+            {/* Output Response Column */}
+            <div className="glass-panel p-5 rounded-2xl border border-slate-800 bg-slate-900/60 shadow-xl space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+                <div className="flex items-center space-x-2">
+                  <FileCode className="w-4 h-4 text-emerald-400" />
+                  <span className="font-mono font-semibold text-slate-200 text-xs sm:text-sm">
+                    OptimizeEnergyResponse (Solution)
+                  </span>
+                </div>
+                <button
+                  onClick={handleCopyOutputJson}
+                  className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 text-slate-300 text-xs font-mono border border-slate-700 transition-colors"
+                >
+                  {copiedOutput ? (
+                    <>
+                      <Check className="w-3 h-3 text-emerald-400" />
+                      <span className="text-emerald-400">Copied</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3 h-3 text-slate-400" />
+                      <span>Copy Output</span>
+                    </>
+                  )}
+                </button>
+              </div>
+              <pre className="text-xs font-mono text-emerald-300 bg-slate-950 p-4 rounded-xl border border-slate-900 overflow-x-auto max-h-[500px] custom-scrollbar">
+                {JSON.stringify(currentResponse, null, 2)}
+              </pre>
+            </div>
           </div>
-        </section>
-      )}
+        )}
+      </div>
 
       {/* Semantic Energy Stream Indicators */}
       <section className="space-y-4">
