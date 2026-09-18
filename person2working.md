@@ -51,6 +51,9 @@
   - Root `POST /optimize-energy` wiring validation, LLM extraction, guardrails, solver, and KPI recalculation.
 - [x] **Task 2.7: Automated Test & Verification Script** (`scripts/test-backend.sh` / `scripts/test-backend.ts`)
   - Automated test suite verifying 100% schema match, zero numerical drift, and $p95 \le 5\text{s}$.
+- [x] **Production Build & Server Reachability Verification** (`npm run build`, `npm run dev`)
+  - Standalone build compiled with zero errors.
+  - Live server verification on `GET /health` (200 OK) and `POST /optimize-energy` (200 OK with full optimal schedule).
 
 ---
 
@@ -74,3 +77,4 @@
 | 2026-09-18 20:03 (Local) | Task 2.7 | Automated test suite scripts/test-backend.ts executed with 100% pass rate across health, schema, directives, balance, and reconciliation. | `data/sample_scenario_101.json`, `scripts/test-backend.ts`, `package.json`, `person2working.md` | COMPLETE |
 | 2026-09-18 20:19 (Local) | ENV-LLM | Configured .gitignore secret safety, created .env.example, initialized ignored .env.local, and implemented dual-provider auto-detection (Groq llama-3.1-8b-instant + OpenAI gpt-4o-mini) in interpreter. | `.gitignore`, `.env.example`, `.env.local`, `lib/llm/interpreter.ts`, `person2working.md` | COMPLETE |
 | 2026-09-18 20:28 (Local) | LIVE-VERIF | Live Groq LLM network verification executed and passed (100% test pass rate). All backend code committed and pushed to remote branch feat/backend-engine. Branch status: Clean and ready for PR / integration review. | `scripts/test-backend.ts`, `lib/llm/interpreter.ts`, `person2working.md` | COMPLETE |
+| 2026-09-18 20:36 (Local) | PROD-BUILD | Next.js production build (`npm run build`) succeeded with 0 errors. Live server verified on GET /health (HTTP 200) and POST /optimize-energy (HTTP 200). | `person2working.md` | COMPLETE |
