@@ -317,3 +317,19 @@ If Task 1.7 needs to be reverted:
 ### 4. Rollback Instructions
 If Task 1.8 needs to be reverted:
 - Remove `README.md` and `presentation/VIDEO_SCRIPT.md`.
+
+---
+
+## [Task 1.9 / INTEGRATION] — Git Merge Conflict Resolution & Unified Lockfile Synchronization
+- **Timestamp**: 2026-09-18 21:30 (Local)
+- **Files Modified**:
+  * `.gitignore`: Cleaned of all conflict markers; set to 6 canonical ignored patterns.
+  * `package.json`: Unified dependencies (`clsx`, `framer-motion`, `javascript-lp-solver`, `lucide-react`, `next`, `openai`, `react`, `react-dom`, `recharts`, `tailwind-merge`, `zod`, `canvas-confetti`) and devDependencies (`@types/*`, `tailwindcss`, `postcss`, `autoprefixer`, `tsx`, `typescript`).
+  * `tsconfig.json`: Removed all conflict markers; verified `@/*: ["./*"]` path mapping and ES2022 target.
+  * `lib/types.ts`: Cleaned of all conflict markers; preserved canonical Section 2.1 domain types and cross-branch compatibility aliases (`HourInput`, `BatteryConfig`, `OptimizeEnergyRequest`, `HourlyPlanEntry`, `HealthResponse`).
+  * `package-lock.json`: Regenerated cleanly via `npm install --legacy-peer-deps`.
+  * `types/declarations.d.ts`: Removed redundant untyped ambient module declaration in favor of `types/javascript-lp-solver.d.ts`.
+- **Verification Commands Executed & Results**:
+  * `npx tsc --noEmit` -> Exit code 0 (Zero errors).
+- **Rollback Instructions**:
+  * Restore previous conflicting file snapshots via git or git stash.
