@@ -354,3 +354,22 @@ If Task 1.8 needs to be reverted:
 - **Rollback Instructions**:
   * Revert git commits or restore previous versions of files in `app/` and `components/`.
 
+---
+
+## [Task 1.11 / FEATURE] — Interactive Custom Operator Note Directive Injection
+- **Timestamp**: 2026-09-18 23:38 (Local)
+- **Files Modified**:
+  * `components/SamplePayloadSelector.tsx`:
+    - Added interactive "Custom Operator Note" card with input field (placeholder: `"Type custom operator note (e.g., Solar will drop by 70% between 11 AM and 3 PM)..."`), Enter key submission, and `"Add / Update Note"` button.
+    - Added live note queue counter, instant chip presets for rapid challenge testing, individual note deletion (`×`), and reset to default scenario directives.
+    - Synchronized live notes with the collapsible JSON drawer and directive log display.
+  * `app/page.tsx`:
+    - Connected `operatorNotes={currentInput.operator_notes}` and `onUpdateNotes` state handler to `SamplePayloadSelector`.
+    - Ensured `currentInput.operator_notes` updates seamlessly so that when `"Run Optimization Dispatch"` is clicked, the custom notes are transmitted directly to `POST /optimize-energy`.
+- **Verification Commands Executed & Results**:
+  * `npx tsc --noEmit` -> Exit code 0 (Zero errors).
+  * `npm run build` -> Exit code 0 (Successfully compiled all routes: `/`, `/health`, `/optimize-energy`).
+- **Rollback Instructions**:
+  * Revert modifications to `components/SamplePayloadSelector.tsx` and `app/page.tsx`.
+
+

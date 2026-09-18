@@ -22,6 +22,11 @@ import {
   Check,
   Zap,
   Info,
+  PlusCircle,
+  X,
+  MessageSquarePlus,
+  Sparkles,
+  RotateCcw,
 } from 'lucide-react';
 
 interface SamplePayloadSelectorProps {
@@ -29,6 +34,8 @@ interface SamplePayloadSelectorProps {
   onSelectScenario: (scenario: OptimizeEnergyInput, response: OptimizeEnergyResponse) => void;
   onExecute: () => void;
   isLoading: boolean;
+  operatorNotes?: string[];
+  onUpdateNotes?: (notes: string[]) => void;
 }
 
 export function SamplePayloadSelector({
@@ -36,21 +43,66 @@ export function SamplePayloadSelector({
   onSelectScenario,
   onExecute,
   isLoading,
+  operatorNotes,
+  onUpdateNotes,
 }: SamplePayloadSelectorProps) {
   const [isJsonOpen, setIsJsonOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [customNote, setCustomNote] = useState('');
+  const [noteFeedback, setNoteFeedback] = useState<string | null>(null);
 
   const scenarios: MockScenarioItem[] = getAllMockScenarios();
   const currentScenario: MockScenarioItem =
     MOCK_SCENARIOS[selectedScenarioId] || scenarios[0];
 
+  // Active notes derived from props or scenario default
+  const activeNotes = operatorNotes !== undefined ? operatorNotes : currentScenario.input.operator_notes;
+
+  const handleAddOrUpdateNote = () => {
+    const trimmed = customNote.trim();
+    if (!trimmed) return;
+
+    const updated = [...activeNotes, trimmed];
+    if (onUpdateNotes) {
+      onUpdateNotes(updated);
+    }
+    setCustomNote('');
+    setNoteFeedback('Note queued for optimization dispatch');
+    setTimeout(() => setNoteFeedback(null), 3000);
+  };
+
+  const handleRemoveNote = (indexToRemove: number) => {
+    const updated = activeNotes.filter((_, idx) => idx !== indexToRemove);
+    if (onUpdateNotes) {
+      onUpdateNotes(updated);
+    }
+  };
+
+  const handleResetToDefaultNotes = () => {
+    if (onUpdateNotes) {
+      onUpdateNotes([...currentScenario.input.operator_notes]);
+    }
+    setNoteFeedback('Reset to scenario default notes');
+    setTimeout(() => setNoteFeedback(null), 2500);
+  };
+
   const handleCopyJson = () => {
-    navigator.clipboard.writeText(
-      JSON.stringify(currentScenario.input, null, 2)
-    );
+    const payloadToCopy: OptimizeEnergyInput = {
+      ...currentScenario.input,
+      operator_notes: activeNotes,
+    };
+    navigator.clipboard.writeText(JSON.stringify(payloadToCopy, null, 2));
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  // Quick preset suggestions for rapid testing
+  const suggestions = [
+    'Solar will drop by 70% between 11 AM and 3 PM',
+    'Maintain at least 35 kWh reserve between 17:00 and 22:00',
+    'Grid import must not exceed 25 kWh per hour from 14:00 to 18:00',
+    'Do not charge battery between 12:00 and 15:00',
+  ];
 
   return (
     <div className="bg-white rounded-xl p-5 sm:p-6 border border-zinc-200 shadow-sm space-y-6">
@@ -64,7 +116,7 @@ export function SamplePayloadSelector({
             </h2>
           </div>
           <p className="text-xs text-zinc-500">
-            Select a calibrated 24-hour test scenario or inspect raw JSON parameters before dispatch.
+            Select a calibrated 24-hour test scenario, inject custom natural language directives, or inspect raw JSON parameters.
           </p>
         </div>
 
@@ -125,6 +177,79 @@ export function SamplePayloadSelector({
         })}
       </div>
 
+      {/* Interactive Custom Operator Note Input Section */}
+      <div className="p-4 sm:p-5 rounded-xl bg-zinc-900 text-zinc-100 border border-zinc-800 shadow-md space-y-3.5">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div className="flex items-center space-x-2">
+            <MessageSquarePlus className="w-4 h-4 text-emerald-400" />
+            <span className="text-xs font-bold uppercase tracking-wider font-mono text-zinc-200">
+              Interactive Custom Operator Note
+            </span>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 border border-zinc-700">
+              {activeNotes.length} active
+            </span>
+          </div>
+
+          {noteFeedback && (
+            <span className="text-xs font-mono text-emerald-400 flex items-center space-x-1 animate-fade-in">
+              <Check className="w-3.5 h-3.5 text-emerald-400" />
+              <span>{noteFeedback}</span>
+            </span>
+          )}
+        </div>
+
+        {/* Input & Action Button */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+          <input
+            type="text"
+            value={customNote}
+            onChange={(e) => setCustomNote(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleAddOrUpdateNote();
+              }
+            }}
+            placeholder="Type custom operator note (e.g., Solar will drop by 70% between 11 AM and 3 PM)..."
+            className="flex-1 bg-zinc-950/90 border border-zinc-700 text-zinc-100 placeholder:text-zinc-500 text-xs sm:text-sm px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all font-sans shadow-inner"
+          />
+          <button
+            type="button"
+            onClick={handleAddOrUpdateNote}
+            className="shrink-0 bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] text-zinc-950 font-bold text-xs sm:text-sm px-5 py-2.5 rounded-lg shadow-md transition-all flex items-center justify-center space-x-1.5"
+          >
+            <PlusCircle className="w-4 h-4 text-zinc-950" />
+            <span>Add / Update Note</span>
+          </button>
+        </div>
+
+        {/* Preset Suggestion Chips */}
+        <div className="flex flex-wrap items-center gap-1.5 pt-1 text-xs">
+          <span className="text-zinc-500 text-[11px] font-mono mr-1">Quick Presets:</span>
+          {suggestions.map((s, sIdx) => (
+            <button
+              key={sIdx}
+              type="button"
+              onClick={() => setCustomNote(s)}
+              className="px-2 py-1 rounded-md bg-zinc-800/80 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-700 text-[11px] transition-colors truncate max-w-[260px]"
+              title={s}
+            >
+              &ldquo;{s}&rdquo;
+            </button>
+          ))}
+          {activeNotes.length > 0 && onUpdateNotes && (
+            <button
+              type="button"
+              onClick={handleResetToDefaultNotes}
+              className="ml-auto inline-flex items-center space-x-1 text-[11px] font-mono text-zinc-400 hover:text-zinc-200 transition-colors py-1 px-1.5"
+            >
+              <RotateCcw className="w-3 h-3 text-zinc-400" />
+              <span>Reset Notes</span>
+            </button>
+          )}
+        </div>
+      </div>
+
       {/* Scenario Metadata & Operator Notes */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Scenario Info */}
@@ -167,7 +292,7 @@ export function SamplePayloadSelector({
           </div>
         </div>
 
-        {/* Operator Directive Log */}
+        {/* Operator Directive Log (Live View) */}
         <div className="p-4 rounded-xl bg-zinc-50 border border-zinc-200 space-y-2">
           <div className="flex items-center justify-between text-xs text-zinc-600 font-semibold">
             <div className="flex items-center space-x-2">
@@ -175,18 +300,32 @@ export function SamplePayloadSelector({
               <span>Operator Directive Log</span>
             </div>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white border border-zinc-200 text-zinc-700 font-medium">
-              {currentScenario.input.operator_notes.length} note(s)
+              {activeNotes.length} note(s)
             </span>
           </div>
-          <div className="space-y-1.5 max-h-24 overflow-y-auto">
-            {currentScenario.input.operator_notes.map((note, nIdx) => (
-              <p
-                key={nIdx}
-                className="text-xs text-zinc-700 italic bg-white p-2 rounded-lg border border-zinc-200"
-              >
-                &ldquo;{note}&rdquo;
-              </p>
-            ))}
+          <div className="space-y-1.5 max-h-28 overflow-y-auto">
+            {activeNotes.length === 0 ? (
+              <p className="text-xs text-zinc-400 italic">No notes queued.</p>
+            ) : (
+              activeNotes.map((note, nIdx) => (
+                <div
+                  key={nIdx}
+                  className="flex items-start justify-between gap-1 text-xs text-zinc-800 italic bg-white p-2 rounded-lg border border-zinc-200"
+                >
+                  <span className="leading-snug">&ldquo;{note}&rdquo;</span>
+                  {onUpdateNotes && (
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveNote(nIdx)}
+                      className="text-zinc-400 hover:text-rose-600 transition-colors p-0.5 shrink-0 not-italic"
+                      title="Remove this directive"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>
@@ -215,7 +354,7 @@ export function SamplePayloadSelector({
           <div className="p-4 border-t border-zinc-200 bg-zinc-50 space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-mono text-zinc-500">
-                OptimizeEnergyInput format compliant with lib/types.ts
+                OptimizeEnergyInput format compliant with lib/types.ts ({activeNotes.length} notes)
               </span>
               <button
                 onClick={handleCopyJson}
@@ -235,7 +374,14 @@ export function SamplePayloadSelector({
               </button>
             </div>
             <pre className="text-xs font-mono text-zinc-800 bg-zinc-50 border border-zinc-200 rounded-xl p-4 overflow-x-auto max-h-72">
-              {JSON.stringify(currentScenario.input, null, 2)}
+              {JSON.stringify(
+                {
+                  ...currentScenario.input,
+                  operator_notes: activeNotes,
+                },
+                null,
+                2
+              )}
             </pre>
           </div>
         )}

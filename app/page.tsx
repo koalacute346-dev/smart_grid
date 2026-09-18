@@ -280,6 +280,13 @@ export default function UnifiedOperationsDashboard() {
         onSelectScenario={handleSelectScenario}
         onExecute={handleExecuteOptimization}
         isLoading={isLoading}
+        operatorNotes={currentInput.operator_notes}
+        onUpdateNotes={(newNotes) => {
+          setCurrentInput((prev) => ({
+            ...prev,
+            operator_notes: newNotes,
+          }));
+        }}
       />
 
       {/* Plan Strategy Banner */}
