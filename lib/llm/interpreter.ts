@@ -62,11 +62,15 @@ export function fallbackRegexInterpreter(notes: string[]): DirectiveInterpretati
       const toMatch = lower.match(/(?:drop to|reduced to|falls to|at)\s*(?:about\s*)?(\d+)%/);
       // Check "drop by X%" or "reduced by X%"
       const byMatch = lower.match(/(?:drop by|reduced by|falls by|cut by)\s*(?:about\s*)?(\d+)%/);
+      // Check "X% reduction" or "X% drop"
+      const pctReductionMatch = lower.match(/(\d+)%\s*(?:reduction|drop|cut|decrease)/);
 
       if (toMatch) {
         factor = parseFloat(toMatch[1]) / 100;
       } else if (byMatch) {
         factor = 1.0 - (parseFloat(byMatch[1]) / 100);
+      } else if (pctReductionMatch) {
+        factor = 1.0 - (parseFloat(pctReductionMatch[1]) / 100);
       } else if (lower.includes('half')) {
         factor = 0.5;
       }
@@ -99,7 +103,16 @@ export function fallbackRegexInterpreter(notes: string[]): DirectiveInterpretati
     }
 
     // 3. No Discharge Window
-    if (lower.includes('no discharge') || lower.includes('do not discharge') || lower.includes('stop discharging') || lower.includes('conserve battery') || lower.includes('conserve stored')) {
+    if (
+      lower.includes('no discharge') ||
+      lower.includes('do not discharge') ||
+      lower.includes('stop discharging') ||
+      lower.includes('conserve battery') ||
+      lower.includes('conserve stored') ||
+      lower.includes('discharging offline') ||
+      lower.includes('discharge offline') ||
+      (lower.includes('offline') && lower.includes('discharg'))
+    ) {
       const hours = parseTimeWindow(lower);
       if (hours.length > 0) {
         return {
@@ -162,6 +175,8 @@ export function fallbackRegexInterpreter(notes: string[]): DirectiveInterpretati
  * Seamlessly auto-detects either Groq (llama-3.1-8b-instant) or OpenAI (gpt-4o-mini).
  * Falls back to deterministic regex parser if no API key is provided or on network error.
  */
+let cachedGroqModel = 'llama-3.1-8b-instant';
+
 export async function interpretOperatorNotes(
   notes: string[]
 ): Promise<DirectiveInterpretation[]> {
@@ -180,7 +195,7 @@ export async function interpretOperatorNotes(
       apiKey: groqKey,
       baseURL: 'https://api.groq.com/openai/v1',
     });
-    modelName = 'llama-3.1-8b-instant';
+    modelName = cachedGroqModel;
   } else if (openaiKey) {
     client = new OpenAI({
       apiKey: openaiKey,
@@ -192,7 +207,7 @@ export async function interpretOperatorNotes(
   }
 
   try {
-    console.log(`[LLM Interpreter] Calling provider: ${groqKey ? 'Groq (llama-3.1-8b-instant)' : openaiKey ? 'OpenAI (gpt-4o-mini)' : 'Fallback'}...`);
+    console.log(`[LLM Interpreter] Calling provider: ${groqKey ? `Groq (${modelName})` : openaiKey ? 'OpenAI (gpt-4o-mini)' : 'Fallback'}...`);
     let completion;
     try {
       completion = await client.chat.completions.create({
@@ -208,6 +223,7 @@ export async function interpretOperatorNotes(
       // If Groq account has specific available models (e.g. openai/gpt-oss-20b), retry seamlessly
       if (groqKey && (apiErr?.status === 404 || apiErr?.code === 'model_not_found')) {
         console.log('[LLM Interpreter] Groq model fallback -> openai/gpt-oss-20b...');
+        cachedGroqModel = 'openai/gpt-oss-20b';
         completion = await client.chat.completions.create({
           model: 'openai/gpt-oss-20b',
           temperature: 0.0,

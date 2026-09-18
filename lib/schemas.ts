@@ -110,9 +110,9 @@ export const DirectiveInterpretationSchema = z
     structured_adjustment: z.union([
       SolarReductionAdjustmentSchema,
       MinimumBatteryReserveAdjustmentSchema,
-      NoChargeWindowAdjustmentSchema,
-      NoDischargeWindowAdjustmentSchema,
       MaxGridWindowAdjustmentSchema,
+      NoChargeWindowAdjustmentSchema.strict(),
+      NoDischargeWindowAdjustmentSchema.strict(),
       z.null(),
     ]),
     explanation: z.string().trim().min(1),
