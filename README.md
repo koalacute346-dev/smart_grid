@@ -102,3 +102,5 @@ docker run -p 3000:3000 smart-campus-optimizer
 | **Performance & Latency** | 10/10 | Sub-2.5s end-to-end execution ($p95 \le 5.0\text{s}$ target). |
 | **Docker Fallback & Reproducibility** | 10/10 | Non-root 3-stage Alpine Dockerfile with Next.js standalone output. |
 | **Documentation & Code Quality** | 10/10 | Comprehensive README.md, detailed working logs, and clean modular architecture. |
+the api key used GROQ_API_KEY=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
+to use this create a .env.local file root directory and then paste the api key
