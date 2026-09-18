@@ -3,7 +3,10 @@
  * BUP CSE Fest 2026 Hackathon (Smart Campus Energy Optimization Challenge)
  * 
  * Single Source of Truth for Data Contracts across Backend and Frontend.
+ * Defined in PROJECT_BLUEPRINT.md Section 2.1.
  */
+
+export type BatteryAction = 'charge' | 'discharge' | 'idle';
 
 export type DirectiveType =
   | 'solar_reduction'
@@ -15,7 +18,7 @@ export type DirectiveType =
 
 export interface SolarReductionAdjustment {
   hours: number[];
-  factor: number; // Fraction remaining in [0, 1], e.g., 80% reduction -> 0.20
+  factor: number; // Fraction remaining in [0, 1], e.g. 80% reduction -> 0.20
 }
 
 export interface MinimumBatteryReserveAdjustment {
@@ -52,31 +55,7 @@ export interface DirectiveInterpretation {
   explanation: string;
 }
 
-export interface HourInput {
-  hour: number;
-  demand_kwh: number;
-  solar_kwh: number;
-  tariff_bdt_per_kwh: number;
-}
-
-export interface BatteryConfig {
-  capacity_kwh: number;
-  initial_energy_kwh: number;
-  minimum_energy_kwh: number;
-  max_charge_kwh_per_hour: number;
-  max_discharge_kwh_per_hour: number;
-}
-
-export interface OptimizeEnergyRequest {
-  scenario_id: string;
-  operator_notes: string[];
-  hours: HourInput[];
-  battery: BatteryConfig;
-}
-
-export type BatteryAction = 'charge' | 'discharge' | 'idle';
-
-export interface HourlyPlanEntry {
+export interface HourlyPlanItem {
   hour: number;
   grid_kwh: number;
   solar_used_kwh: number;
@@ -85,10 +64,32 @@ export interface HourlyPlanEntry {
   battery_energy_after_kwh: number;
 }
 
+export interface HourlyInputItem {
+  hour: number;
+  demand_kwh: number;
+  solar_kwh: number;
+  tariff_bdt_per_kwh: number;
+}
+
+export interface BatteryInput {
+  capacity_kwh: number;
+  initial_energy_kwh: number;
+  minimum_energy_kwh: number;
+  max_charge_kwh_per_hour: number;
+  max_discharge_kwh_per_hour: number;
+}
+
+export interface OptimizeEnergyInput {
+  scenario_id: string;
+  operator_notes: string[];
+  hours: HourlyInputItem[];
+  battery: BatteryInput;
+}
+
 export interface OptimizeEnergyResponse {
   scenario_id: string;
   directive_interpretation: DirectiveInterpretation[];
-  hourly_plan: HourlyPlanEntry[];
+  hourly_plan: HourlyPlanItem[];
   total_grid_kwh: number;
   total_cost_bdt: number;
   peak_grid_kwh: number;
@@ -99,8 +100,8 @@ export interface HealthResponse {
   status: 'ok';
 }
 
-// Aliases for compatibility with earlier blueprint references
-export type HourlyInputItem = HourInput;
-export type BatteryInput = BatteryConfig;
-export type OptimizeEnergyInput = OptimizeEnergyRequest;
-export type HourlyPlanItem = HourlyPlanEntry;
+// Canonical Aliases for complete interoperability across all backend/frontend modules
+export type HourInput = HourlyInputItem;
+export type BatteryConfig = BatteryInput;
+export type OptimizeEnergyRequest = OptimizeEnergyInput;
+export type HourlyPlanEntry = HourlyPlanItem;
